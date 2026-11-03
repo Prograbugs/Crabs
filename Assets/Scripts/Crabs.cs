@@ -1,10 +1,8 @@
 using UnityEngine;
-using System.Collections;
-using System;
-using System.Reflection.Metadata.Ecma335;
 
 public class Crabs : MonoBehaviour
 {
+    public static Crabs Instance;
     enum _estado {victoria, derrota, fase2, jugando}
     Dado[] dados = new Dado[2];
     _estado _estadoActual = _estado.jugando;
@@ -12,7 +10,12 @@ public class Crabs : MonoBehaviour
     private bool _isFase1 = true;
     private int _resultadoTotal;
     [SerializeField] private int _cantidadCaras = 6;
-    
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
     {
         for (int i = 0; i < dados.Length; i++)
@@ -21,8 +24,7 @@ public class Crabs : MonoBehaviour
         }
     }
 
-    
-    void Update()
+    public void Play()
     {
         switch(_estadoActual)
         {
@@ -46,8 +48,8 @@ public class Crabs : MonoBehaviour
                 Debug.Log("Perdiste");
                 break;
         }
-    }
 
+    }
 
     private int TirarDados()
     {
