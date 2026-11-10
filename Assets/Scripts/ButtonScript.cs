@@ -18,11 +18,16 @@ public class ButtonScript : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerButton.onClick.AddListener(Crabs.Instance.Play);
+        PlayerButton.onClick.AddListener(StartPlaying);
     }
 
     private void OnDisable()
     {
-        PlayerButton.onClick.RemoveListener(Crabs.Instance.Play);
+        PlayerButton.onClick.RemoveListener(StartPlaying);
+    }
+
+    private void StartPlaying()
+    {
+        Crabs.Instance.Play();
     }
 }
