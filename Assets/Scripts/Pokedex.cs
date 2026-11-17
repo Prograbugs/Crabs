@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class Pokedex : MonoBehaviour
 {
     private Keyboard _myKeyboard;
+    private Mouse _myMouse;
     [SerializeField] private PokemonData[] _pokemonData = new PokemonData[3];
     [SerializeField] private TextMeshProUGUI _nombre;
     [SerializeField] private TextMeshProUGUI _numPokedex;
@@ -15,6 +16,7 @@ public class Pokedex : MonoBehaviour
     void Start()
     {
         _myKeyboard = Keyboard.current;
+        _myMouse = Mouse.current;
     }
 
     void Update()

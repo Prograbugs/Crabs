@@ -7,8 +7,8 @@ public class Crabs : MonoBehaviour
     Dado[] dados = new Dado[2];
     _estado _estadoActual = _estado.jugando;
     private int _valorAnterior;
-    private bool _entrandoFase2 = true;
     private int _resultadoTotal;
+    private bool _isEntrandoFase2 = true;
     [SerializeField] private int _cantidadCaras = 6;
 
     private void Awake()
@@ -40,11 +40,11 @@ public class Crabs : MonoBehaviour
         switch (_estadoActual)
         {
             case _estado.victoria:
-                Debug.Log("Ganaste");
+                Victoria();
                 break;
 
             case _estado.derrota:
-                Debug.Log("Perdiste");
+                Derrota();
                 break;
         }
 
@@ -63,7 +63,7 @@ public class Crabs : MonoBehaviour
 
     private void Fase1()
     {
-        Debug.Log("Jugando Fase 1");
+        EventBus.MandarPrimerMensaje("Jugando Primera Fase");
         _resultadoTotal = TirarDados();
 
         if (_resultadoTotal == 7 || _resultadoTotal == 11)
@@ -80,19 +80,39 @@ public class Crabs : MonoBehaviour
             _valorAnterior = _resultadoTotal;
             _estadoActual = _estado.fase2;
         }
+        EventBus.ResultadoDados(_resultadoTotal.ToString());
     }
     private void Fase2()
     {
-        if (_entrandoFase2)
+        if (_isEntrandoFase2)
         {
-            Debug.Log("Entrando a la fase 2");
-            _entrandoFase2 = false;
+            EventBus.MandarMensaje("Entrando a la Fase 2");
+            _isEntrandoFase2 = false;
         }
-        else { Debug.Log("Jugando Fase 2"); }
+        else { EventBus.MandarMensaje("Jugando Fase 2"); }
         _resultadoTotal = TirarDados();
 
         if (_resultadoTotal == _valorAnterior) { _estadoActual = _estado.victoria; }
 
         else if (_resultadoTotal == 7) { _estadoActual = _estado.derrota; }
+
+        EventBus.ResultadoDados(_resultadoTotal.ToString());
+    }
+
+    private void Victoria()
+    {
+        JsonConverter.Instance.PlayerInfo.VictoriasTotales += 1;
+        EventBus.MandarMensaje("Ganaste");
+        EventBus.ResultadoDados(_resultadoTotal.ToString());
+        JsonConverter.Instance.SaveJson();
+        _estadoActual = _estado.jugando;
+    }
+    private void Derrota()
+    {
+        JsonConverter.Instance.PlayerInfo.DerrotasTotales += 1;
+        EventBus.MandarMensaje("Perdiste");
+        EventBus.ResultadoDados(_resultadoTotal.ToString());
+        JsonConverter.Instance.SaveJson();
+        _estadoActual = _estado.jugando;
     }
 }
